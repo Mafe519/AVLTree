@@ -23,4 +23,6 @@ TreeNode* toBalance(TreeNode* node);
 void menu();
 void imprimir(TreeNode* node, int nivel);
 TreeNode* adicionarNo(TreeNode* node);
+TreeNode* remover(TreeNode* node, int element);
+TreeNode* removerNo(TreeNode* node);
 #endif

@@ -115,17 +115,20 @@ TreeNode* toBalance(TreeNode* node){
 void menu(){
     TreeNode* node = NULL;
     int escolha = 0;
-    while(escolha!=3){    
+    while(escolha!=4){    
         printf("Bem Vindo a Arvore AVL! \n\n");
-        printf("1 - Adicione Valores à árvore\n");
-        printf("2 - Visualizar a árvore com os valores atuais\n");
-        printf("3 - Sair do programa\n"); 
+        printf("1 - Adicione valores à árvore\n");
+        printf("2 - Remova valores da árvore\n");
+        printf("3 - Visualizar a árvore com os valores atuais\n");
+        printf("4 - Sair do programa\n"); 
         scanf("%d",&escolha);
         switch(escolha){
             
             case 1:  node=adicionarNo(node);
                     break;
-            case 2: imprimir(node,1); printf("\n\n");
+            case 2:  node=removerNo(node);
+                    break;
+            case 3: imprimir(node,1); printf("\n\n");
                     break;
         }   
     }
@@ -136,6 +139,14 @@ TreeNode* adicionarNo(TreeNode* node){
     printf("Digite o valor\n");
     scanf("%d",&valor);
     node=add(valor,node);
+    return node;
+}
+
+TreeNode* removerNo(TreeNode* node){
+    int valor;
+    printf("Digite o valor\n");
+    scanf("%d",&valor);
+    node=remover(node,valor);
     return node;
 }
 
@@ -151,4 +162,47 @@ void imprimir(TreeNode* node, int nivel){
         printf("%d", node->element);
         imprimir(node->left,nivel+1);
     }  
+}
+
+TreeNode* remover(TreeNode* node, int element){
+    if(node==NULL){
+        printf("Valor não encontrado!\n");
+        return NULL;
+    }
+    else{
+        if(node->element==element){
+            if(node->left==NULL && node->right==NULL){
+                free(node);
+                return NULL;
+            }
+            else{
+                if(node->left!=NULL && node->right!=NULL){
+                    TreeNode *  aux = node->left;
+                    while(aux->right!=NULL)
+                        aux=aux->right;
+                    node->element= aux->element;
+                    aux->element=element;
+                    node->left = remover(node->left,element);
+                    return node;
+                }
+            else{
+                TreeNode* aux;
+                if(node->left!=NULL)
+                    aux=node->left;
+                if(node->right!=NULL)
+                    aux=node->right;
+                return aux;
+            }
+            }
+        }
+        else{
+            if(element<node->element)
+                node->left = remover(node->left, element);
+            else
+                node->right = remover(node->right, element);
+        }
+        node->height=maior(height(node->left),height(node->right))+1;;
+        node=toBalance(node);
+        return node;
+    }
 }
